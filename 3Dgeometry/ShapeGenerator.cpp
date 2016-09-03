@@ -245,12 +245,12 @@ ShapeData ShapeGenerator::makeBlenderCube(const std::string& fileName)
 	ShapeData ret;
 	IndexedModel model = OBJModel(fileName).ToIndexedModel();
 
-	ret.numVertices = (model.positions.size() * sizeof(model.positions[0])) / sizeof(model.positions[0]);
+	ret.numVertices = model.positions.size();
 	ret.positions = new glm::vec3[ret.numVertices];
-	memcpy(ret.positions, model.positions.data(), sizeof(model.positions));
+	memcpy(ret.positions, &model.positions[0], model.positions.size() * sizeof(vec3));
 
-	ret.numIndices = (model.indices.size() * sizeof(model.indices[0])) / sizeof(model.indices[0]);
+	ret.numIndices = model.indices.size();
 	ret.indices = new GLushort[ret.numIndices];
-	memcpy(ret.indices, model.indices.data(), sizeof(model.indices));
+	memcpy(ret.indices, &model.indices[0], model.indices.size() * sizeof(unsigned int));
 	return ret;
 }
