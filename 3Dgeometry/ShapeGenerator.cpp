@@ -2,8 +2,10 @@
 #include <glm\glm.hpp>
 #include <Vertex.h>
 #include "obj_loader.h"
-#include <vector>
+#include "vector"
+#include <iostream>
 using glm::vec3;
+using namespace std;
 #define NUM_ARRAY_ELEMENTS(a) sizeof(a) / sizeof(*a)
 
 ShapeData ShapeGenerator::makeTriangle()
@@ -240,17 +242,314 @@ ShapeData ShapeGenerator::makeArrow()
 	return ret;
 }
 
-ShapeData ShapeGenerator::makeBlenderCube(const std::string& fileName)
+// RADI
+/*ShapeData ShapeGenerator::makeBlenderCube(const std::string& fileName)
 {
 	ShapeData ret;
 	IndexedModel model = OBJModel(fileName).ToIndexedModel();
 
 	ret.numVertices = model.positions.size();
 	ret.positions = new glm::vec3[ret.numVertices];
-	memcpy(ret.positions, &model.positions[0], model.positions.size() * sizeof(vec3));
+	//ret.vertices = new Vertex[ret.numVertices];
+	std::copy(model.positions.begin(), model.positions.end(), ret.positions);
+
+	for (int i = 0; i < ret.numVertices; i++){
+		std::cout << "{"<< ret.positions[i].x << " " << ret.positions[i].y << " " << ret.positions[i].z << "}" << endl;
+	}
 
 	ret.numIndices = model.indices.size();
 	ret.indices = new GLushort[ret.numIndices];
-	memcpy(ret.indices, &model.indices[0], model.indices.size() * sizeof(unsigned int));
+	std::copy(model.indices.begin(), model.indices.end(), ret.indices);
+	return ret;
+}*/
+
+// NE RADI 
+/*ShapeData ShapeGenerator::makeBlenderCube(const std::string& fileName)
+{
+	ShapeData ret;
+	IndexedModel model = OBJModel(fileName).ToIndexedModel();
+
+	glm::vec3* pozicije = new glm::vec3[model.positions.size()];
+	std::copy(model.positions.begin(), model.positions.end(), pozicije);
+	ret.numVertices = model.positions.size();
+	ret.vertices = new Vertex[ret.numVertices];
+
+	for (int i = 0; i < ret.numVertices; i++) 
+	{
+		std::cout << "{" << pozicije[i].x << " " << pozicije[i].y << " " << pozicije[i].z << "}" << endl;
+	}
+	cout << endl;
+
+	for (int j = 0; j < ret.numVertices; j++) 
+	{
+		Vertex& v = ret.vertices[j];
+		v.position = pozicije[j];
+		v.color = glm::vec3(0, 1, 0);
+	}
+
+	for (int k = 0; k < ret.numVertices; k++)
+	{
+		std::cout << "{" << ret.vertices[k].position.x << " " << ret.vertices[k].position.y << " " << ret.vertices[k].position.z << "}" << endl;
+	}
+
+	cout << "BOJE: " << endl;
+	for (int k = 0; k < ret.numVertices*2; k++)
+	{
+		std::cout << "{" << ret.vertices[k].color.x << " " << ret.vertices[k].color.y << " " << ret.vertices[k].color.z << "}" << endl;
+	}
+
+	ret.numIndices = model.indices.size();
+	ret.indices = new GLushort[ret.numIndices];
+	std::copy(model.indices.begin(), model.indices.end(), ret.indices);
+	return ret;
+}*/
+
+// RADI !!!!!!!!!!
+ShapeData ShapeGenerator::makeBlenderCube(const std::string& fileName)
+{
+	ShapeData ret;
+	IndexedModel model = OBJModel(fileName).ToIndexedModel();
+
+	ret.numVertices = model.positions.size();
+	glm::vec3* Pozicije = new glm::vec3[ret.numVertices];
+	ret.vertices = new Vertex[ret.numVertices];
+	std::copy(model.positions.begin(), model.positions.end(), Pozicije);
+
+	for (int i = 0; i < ret.numVertices; i++) {
+		//std::cout << "{" << Pozicije[i].x << " " << Pozicije[i].y << " " << Pozicije[i].z << "}" << endl;
+		cout << i << endl;
+
+		Vertex& v = ret.vertices[i];
+		v.position.x = Pozicije[i].x;
+		v.position.y = Pozicije[i].y;
+		v.position.z = Pozicije[i].z;
+
+		if (i >= 0  && i <= 5)
+		{
+			v.color = glm::vec3(1, 0, 1);
+		}
+		else if (i >= 6 && i <= 11 )
+		{
+			v.color = glm::vec3(0, 1, 1);
+		}
+		else if (i >= 12 && i <= 17)
+		{
+			v.color = glm::vec3(0, 1, 0);
+		}
+		else if (i >= 18 && i <= 23)
+		{
+			v.color = glm::vec3(1, 0, 0);
+		}
+		else if (i >= 24 && i <= 29)
+		{
+			v.color = glm::vec3(0, 0, 0.5);
+		}
+		else
+		{
+			v.color = glm::vec3(1, 1, 0);
+		}
+	}
+
+	//cout << endl;
+
+	/*for (int j = 0; j < ret.numVertices; j++) {
+		std::cout << "{" << ret.vertices[j].position.x << " " << ret.vertices[j].position.y << " " << ret.vertices[j].position.z << "}" << endl;
+	}*/
+
+
+	ret.numIndices = model.indices.size();
+	ret.indices = new GLushort[ret.numIndices];
+	std::copy(model.indices.begin(), model.indices.end(), ret.indices);
+	return ret;
+}
+
+
+ShapeData ShapeGenerator::makeBlenderPlane(const std::string& fileName)
+{
+	ShapeData ret;
+	IndexedModel model = OBJModel(fileName).ToIndexedModel();
+
+	ret.numVertices = model.positions.size();
+	glm::vec3* Pozicije = new glm::vec3[ret.numVertices];
+	ret.vertices = new Vertex[ret.numVertices];
+	std::copy(model.positions.begin(), model.positions.end(), Pozicije);
+
+	for (int i = 0; i < ret.numVertices; i++) {
+		cout << i << endl;
+
+		Vertex& v = ret.vertices[i];
+		v.position.x = Pozicije[i].x;
+		v.position.y = Pozicije[i].y;
+		v.position.z = Pozicije[i].z;
+
+		v.color = glm::vec3(0, 1, 0);
+	}
+
+	ret.numIndices = model.indices.size();
+	ret.indices = new GLushort[ret.numIndices];
+	std::copy(model.indices.begin(), model.indices.end(), ret.indices);
+	return ret;
+}
+
+
+ShapeData ShapeGenerator::makeBlenderSphere(const std::string& fileName)
+{
+	ShapeData ret;
+	IndexedModel model = OBJModel(fileName).ToIndexedModel();
+
+	ret.numVertices = model.positions.size();
+	glm::vec3* Pozicije = new glm::vec3[ret.numVertices];
+	ret.vertices = new Vertex[ret.numVertices];
+	std::copy(model.positions.begin(), model.positions.end(), Pozicije);
+
+	for (int i = 0; i < ret.numVertices; i++) {
+		//cout << i << endl;
+
+		Vertex& v = ret.vertices[i];
+		v.position.x = Pozicije[i].x;
+		v.position.y = Pozicije[i].y;
+		v.position.z = Pozicije[i].z;
+
+		if (i % 2 == 0)
+			v.color = glm::vec3(0, 0, 1);
+		else
+			v.color = glm::vec3(0, 1, 0);
+	}
+
+	ret.numIndices = model.indices.size();
+	ret.indices = new GLushort[ret.numIndices];
+	std::copy(model.indices.begin(), model.indices.end(), ret.indices);
+	return ret;
+}
+
+
+ShapeData ShapeGenerator::makeBlenderCone(const std::string& fileName)
+{
+	ShapeData ret;
+	IndexedModel model = OBJModel(fileName).ToIndexedModel();
+
+	ret.numVertices = model.positions.size();
+	glm::vec3* Pozicije = new glm::vec3[ret.numVertices];
+	ret.vertices = new Vertex[ret.numVertices];
+	std::copy(model.positions.begin(), model.positions.end(), Pozicije);
+
+	int a1 = 0;
+	int a2 = 0;
+
+	for (int i = 0; i < ret.numVertices; i++) {
+		cout << i << endl;
+
+		Vertex& v = ret.vertices[i];
+		v.position.x = Pozicije[i].x;
+		v.position.y = Pozicije[i].y;
+		v.position.z = Pozicije[i].z;
+
+		if (i < 95)
+		{
+			if (a1 < 3 && a2 < 3)
+			{
+				v.color = glm::vec3(0, 0, 1);
+				a1++;
+				a2++;
+			}
+			else if ((a1>=3 && a1<6) && (a2>=3 && a2<=6))
+			{
+				v.color = glm::vec3(1, 1, 0);
+				a1++;
+				a2++;
+			}
+			else
+			{
+				v.color = glm::vec3(0, 0, 1);
+				a1 = 1;
+				a2 = 1;
+			}
+		}
+		else
+			v.color = glm::vec3(0, 0, 1);
+	}
+
+	ret.numIndices = model.indices.size();
+	ret.indices = new GLushort[ret.numIndices];
+	std::copy(model.indices.begin(), model.indices.end(), ret.indices);
+	return ret;
+}
+
+
+ShapeData ShapeGenerator::makeBlenderCylinder(const std::string& fileName)
+{
+	ShapeData ret;
+	IndexedModel model = OBJModel(fileName).ToIndexedModel();
+
+	ret.numVertices = model.positions.size();
+	glm::vec3* Pozicije = new glm::vec3[ret.numVertices];
+	ret.vertices = new Vertex[ret.numVertices];
+	std::copy(model.positions.begin(), model.positions.end(), Pozicije);
+
+	int a1 = 0;
+	int a2 = 0;
+
+	for (int i = 0; i < ret.numVertices; i++) {
+		cout << i << endl;
+
+		Vertex& v = ret.vertices[i];
+		v.position.x = Pozicije[i].x;
+		v.position.y = Pozicije[i].y;
+		v.position.z = Pozicije[i].z;
+
+		if (i < 190)
+			if (a1 < 3 && a2 < 3)
+			{
+				v.color = glm::vec3(1, 0, 0);
+				a1++;
+				a2++;
+			}
+			else if ((a1 >= 3 && a1<6) && (a2 >= 3 && a2 <= 6))
+			{
+				v.color = glm::vec3(1, 1, 0);
+				a1++;
+				a2++;
+			}
+			else
+			{
+				v.color = glm::vec3(1, 0, 0);
+				a1 = 1;
+				a2 = 1;
+			}
+		else
+			v.color = glm::vec3(1, 1, 0);
+	}
+
+	ret.numIndices = model.indices.size();
+	ret.indices = new GLushort[ret.numIndices];
+	std::copy(model.indices.begin(), model.indices.end(), ret.indices);
+	return ret;
+}
+
+
+ShapeData ShapeGenerator::makeBlenderAxis(const std::string& fileName)
+{
+	ShapeData ret;
+	IndexedModel model = OBJModel(fileName).ToIndexedModel();
+
+	ret.numVertices = model.positions.size();
+	glm::vec3* Pozicije = new glm::vec3[ret.numVertices];
+	ret.vertices = new Vertex[ret.numVertices];
+	std::copy(model.positions.begin(), model.positions.end(), Pozicije);
+
+	for (int i = 0; i < ret.numVertices; i++) {
+		//cout << i << endl;
+
+		Vertex& v = ret.vertices[i];
+		v.position.x = Pozicije[i].x;
+		v.position.y = Pozicije[i].y;
+		v.position.z = Pozicije[i].z;
+
+		v.color = glm::vec3(1, 0, 0);
+	}
+
+	ret.numIndices = model.indices.size();
+	ret.indices = new GLushort[ret.numIndices];
+	std::copy(model.indices.begin(), model.indices.end(), ret.indices);
 	return ret;
 }
