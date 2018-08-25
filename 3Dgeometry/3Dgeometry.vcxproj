@@ -147,14 +147,21 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Camera.cpp" />
+    <ClCompile Include="DebugSlider.cpp" />
+    <ClCompile Include="DebugSlider_moc.cpp" />
     <ClCompile Include="GLwindow.cpp" />
     <ClCompile Include="Mainer.cpp" />
+    <ClCompile Include="MyWidget.cpp" />
+    <ClCompile Include="MyWidget_moc.cpp" />
     <ClCompile Include="obj_loader.cpp" />
     <ClCompile Include="ShapeGenerator.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Camera.h" />
+    <ClInclude Include="DebugSlider.h" />
     <ClInclude Include="GLwindow.h" />
+    <ClInclude Include="MyModel.h" />
+    <ClInclude Include="MyWidget.h" />
     <ClInclude Include="obj_loader.h" />
     <ClInclude Include="ShapeData.h" />
     <ClInclude Include="ShapeGenerator.h" />

@@ -6,6 +6,10 @@
     <ClCompile Include="ShapeGenerator.cpp" />
     <ClCompile Include="Camera.cpp" />
     <ClCompile Include="obj_loader.cpp" />
+    <ClCompile Include="MyWidget.cpp" />
+    <ClCompile Include="DebugSlider.cpp" />
+    <ClCompile Include="DebugSlider_moc.cpp" />
+    <ClCompile Include="MyWidget_moc.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="GLwindow.h" />
@@ -14,6 +18,9 @@
     <ClInclude Include="ShapeGenerator.h" />
     <ClInclude Include="Camera.h" />
     <ClInclude Include="obj_loader.h" />
+    <ClInclude Include="MyWidget.h" />
+    <ClInclude Include="DebugSlider.h" />
+    <ClInclude Include="MyModel.h" />
   </ItemGroup>
   <ItemGroup>
     <None Include="VertexShaderCode.glsl" />

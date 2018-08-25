@@ -1,2 +1,4 @@
-﻿  GLwindow.cpp
+﻿  MyWidget.cpp
+c:\users\marko\documents\zavrsni rad\3dgeometry\glwindow.h(6): warning C4099: 'MyModel': type name first seen using 'struct' now seen using 'class'
+  c:\users\marko\documents\zavrsni rad\3dgeometry\mymodel.h(5): note: see declaration of 'MyModel'
   3Dgeometry.vcxproj -> C:\Users\Marko\Documents\Zavrsni rad\3Dgeometry\Debug\3Dgeometry.exe

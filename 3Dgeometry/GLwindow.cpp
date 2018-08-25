@@ -9,7 +9,8 @@
 #include <glm\gtx\transform.hpp>
 #include <Vertex.h>
 #include <ShapeGenerator.h>
-#include "Camera.h"
+#include <Camera.h>
+#include <MyModel.h>
 #include "vector"
 using namespace std;
 using glm::vec3;
@@ -45,6 +46,10 @@ GLuint planeIndexByteOffset;
 GLuint sphereIndexByteOffset;
 GLuint coneIndexByteOffset;
 GLuint axisIndexByteOffset;
+
+GLwindow::GLwindow(MyModel* theModel) : theModel(theModel)
+{
+}
 
 void GLwindow::sendDataToOpenGL()
 {
@@ -206,15 +211,29 @@ void GLwindow::paintGL()
 	mat4 worldToProjectionMatrix = viewToProjectionMatrix * worldToViewMatrix;
 
 	// Cube
-	float a = 2.0;
+	float a = 1.0;
+	GLuint valjakNumIndices = 0;
+
+	if (theModel->checkVisibilityCylinder == false)
+	{
+		valjakNumIndices = 0;
+	}
+	else if (theModel->checkVisibilityCylinder == true)
+	{
+		valjakNumIndices = cubeNumIndices;
+	}
+
 	glBindVertexArray(cubeVertexArrayObjectID);
 	mat4 cube1ModelToWorldMatrix =
-		glm::translate(vec3(-3.0f, 0.0f, -3.0f)) *
-		glm::rotate(0.0f, vec3(1.0f, 0.0f, 0.0f)) *
-		glm::scale(vec3(a, 1.0f, 1.0f));
+		glm::translate(vec3(theModel->lightPosition)) *
+		//glm::translate(vec3(-3.0f, 0.0f, -3.0f)) *
+		glm::rotate(theModel->degreesCylinder, vec3(theModel->axisCylinder)) *
+		//glm::rotate(0.0f, vec3(1.0f, 0.0f, 0.0f)) *
+		glm::scale(vec3(theModel->scaling));
+		//glm::scale(vec3(a, 1.0f, 1.0f));
 	fullTransformMatrix = worldToProjectionMatrix * cube1ModelToWorldMatrix;
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
-	glDrawElements(GL_TRIANGLES, cubeNumIndices, GL_UNSIGNED_SHORT, (void*)cubeIndexByteOffset);
+	glDrawElements(GL_TRIANGLES, valjakNumIndices, GL_UNSIGNED_SHORT, (void*)cubeIndexByteOffset);
 
 	/*mat4 cube2ModelToWorldMatrix =
 		glm::translate(vec3(4.0f, 0.0f, -3.75f)) *
@@ -224,35 +243,97 @@ void GLwindow::paintGL()
 	glDrawElements(GL_TRIANGLES, cubeNumIndices, GL_UNSIGNED_SHORT, (void*)cubeIndexByteOffset);*/
 
 	// Arrow
+	GLuint kockaNumIndices = 0;
+
+	if (theModel->checkVisibilityCube == false)
+	{
+		kockaNumIndices = 0;
+	}
+	else if (theModel->checkVisibilityCube == true)
+	{
+		kockaNumIndices = arrowNumIndices;
+	}
+
 	glBindVertexArray(arrowVertexArrayObjectID);
-	mat4 arrowModelToWorldMatrix = glm::translate(0.0f, 0.0f, -3.0f);
+	mat4 arrowModelToWorldMatrix =
+		glm::translate(theModel->cubePosition) *
+		glm::rotate(theModel->degreesCube, theModel->axisCube) *
+		glm::scale(theModel->scaleCube);
+		//glm::scale(vec3(theModel->scaleCube));
+	//mat4 arrowModelToWorldMatrix = glm::translate(0.0f, 0.0f, -3.0f);
 	fullTransformMatrix = worldToProjectionMatrix * arrowModelToWorldMatrix;
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
-	glDrawElements(GL_TRIANGLES, arrowNumIndices, GL_UNSIGNED_SHORT, (void*)arrowIndexByteOffset);
+	glDrawElements(GL_TRIANGLES, kockaNumIndices, GL_UNSIGNED_SHORT, (void*)arrowIndexByteOffset);
 
 	// Plane
+	GLuint ravninaNumIndices = 0;
+
+	if (theModel->checkVisibilityPlane == false)
+	{
+		ravninaNumIndices = 0;
+	}
+	else if (theModel->checkVisibilityPlane == true)
+	{
+		ravninaNumIndices = planeNumIndices;
+	}
+
 	glBindVertexArray(planeVertexArrayObjectID);
-	mat4 planeModelToWorldMatrix = glm::translate(0.0f, 2.0f, -3.0f);
+	mat4 planeModelToWorldMatrix = 
+		glm::translate(theModel->planePosition) *
+		glm::rotate(theModel->degreesPlane, theModel->axisPlane) *
+		glm::scale(theModel->scalePlane);
+	//mat4 planeModelToWorldMatrix = glm::translate(0.0f, 2.0f, -3.0f);
 	fullTransformMatrix = worldToProjectionMatrix * planeModelToWorldMatrix;
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
-	glDrawElements(GL_TRIANGLES, planeNumIndices, GL_UNSIGNED_SHORT, (void*)planeIndexByteOffset);
+	glDrawElements(GL_TRIANGLES, ravninaNumIndices, GL_UNSIGNED_SHORT, (void*)planeIndexByteOffset);
 
 	// Sphere
+	GLuint kuglaNumIndices = 0;
+
+	if (theModel->checkVisibilitySphere == false)
+	{
+		kuglaNumIndices = 0;
+	}
+	else if (theModel->checkVisibilitySphere == true)
+	{
+		kuglaNumIndices = sphereNumIndices;
+	}
+
 	glBindVertexArray(sphereVertexArrayObjectID);
-	mat4 sphereModelToWorldMatrix = glm::translate(0.0f, -2.0f, -5.0f);
+	mat4 sphereModelToWorldMatrix = 
+		glm::translate(theModel->spherePosition) *
+		glm::rotate(theModel->degreesSphere, theModel->axisSphere) *
+		glm::scale(theModel->scaleSphere);
+	//mat4 sphereModelToWorldMatrix = glm::translate(0.0f, -2.0f, -5.0f);
 	fullTransformMatrix = worldToProjectionMatrix * sphereModelToWorldMatrix;
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
-	glDrawElements(GL_TRIANGLES, sphereNumIndices, GL_UNSIGNED_SHORT, (void*)sphereIndexByteOffset);
+	glDrawElements(GL_TRIANGLES, kuglaNumIndices, GL_UNSIGNED_SHORT, (void*)sphereIndexByteOffset);
 
 	// Cone
+	GLuint stozacNumIndices = 0;
+
+	if (theModel->checkVisibilityCone == false)
+	{
+		stozacNumIndices = 0;
+	}
+	else if (theModel->checkVisibilityCone == true)
+	{
+		stozacNumIndices = coneNumIndices;
+	}
+
 	glBindVertexArray(coneVertexArrayObjectID);
-	mat4 coneModelToWorldMatrix = glm::translate(4.0f, 0.0f, -3.75f);
+	mat4 coneModelToWorldMatrix = 
+		glm::translate(theModel->conePosition) *
+		glm::rotate(theModel->degreesCone, theModel->axisCone) *
+		glm::scale(theModel->scaleCone);
+	//mat4 coneModelToWorldMatrix = glm::translate(4.0f, 0.0f, -3.75f);
 	fullTransformMatrix = worldToProjectionMatrix * coneModelToWorldMatrix;
 	glUniformMatrix4fv(fullTransformationUniformLocation, 1, GL_FALSE, &fullTransformMatrix[0][0]);
-	glDrawElements(GL_TRIANGLES, coneNumIndices, GL_UNSIGNED_SHORT, (void*)coneIndexByteOffset);
+	glDrawElements(GL_TRIANGLES, stozacNumIndices, GL_UNSIGNED_SHORT, (void*)coneIndexByteOffset);
 
 	// Axis
 	glBindVertexArray(axisVertexArrayObjectID);
+
 	mat4 axisxModelToWorldMatrix =
 		glm::translate(vec3(0.0f, 0.0f, 0.0f)) *
 		glm::rotate(90.0f, vec3(0.0f, 0.0f, 1.0f)) *
@@ -280,6 +361,7 @@ void GLwindow::paintGL()
 
 void GLwindow::mouseMoveEvent(QMouseEvent* e)
 {
+	setFocus();
 	camera.mouseUpdate(glm::vec2(e->x(), e->y()));
 	repaint();
 }
@@ -392,7 +474,8 @@ void GLwindow::installShaders()
 
 void GLwindow::initializeGL()
 {
-	setMouseTracking(true);
+	setMinimumSize(1200, 600);
+	setMouseTracking(false);
 	glewInit();
 	glEnable(GL_DEPTH_TEST);
 	sendDataToOpenGL();
